@@ -147,8 +147,13 @@ def test_set_ip_info_linux_builds_spec(monkeypatch, opts):
     vm = _powered_off_vm()
     monkeypatch.setattr("saltext.vcf.clients.vim_vm._vm", lambda o, v, profile=None: vm)
     task = vim_vm_customization.set_ip_info(
-        opts, "web-01", ip="192.168.2.2", subnet="255.255.255.0", gateway="192.168.2.1",
-        dns=["192.168.2.10"], domain="example.com",
+        opts,
+        "web-01",
+        ip="192.168.2.2",
+        subnet="255.255.255.0",
+        gateway="192.168.2.1",
+        dns=["192.168.2.10"],
+        domain="example.com",
     )
     assert task == "task-cust-1"
     spec = vm.CustomizeVM_Task.call_args.kwargs["spec"]
@@ -200,7 +205,11 @@ def test_set_ip_info_guest_os_override(monkeypatch, opts):
     vm.summary.guest.guestFullName = ""
     monkeypatch.setattr("saltext.vcf.clients.vim_vm._vm", lambda o, v, profile=None: vm)
     vim_vm_customization.set_ip_info(
-        opts, "web-01", ip="10.0.0.5", subnet="255.255.255.0", gateway="10.0.0.1",
+        opts,
+        "web-01",
+        ip="10.0.0.5",
+        subnet="255.255.255.0",
+        gateway="10.0.0.1",
         guest_os="Red Hat Enterprise Linux 9",
     )
     spec = vm.CustomizeVM_Task.call_args.kwargs["spec"]

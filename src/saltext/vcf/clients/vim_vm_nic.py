@@ -224,7 +224,9 @@ def remove(opts, vm_id_or_name, nic_key, profile=None):
     return task._moId  # noqa: SLF001
 
 
-def set_dvport(opts, vm_id_or_name, dvs_name_or_id, dport_group_name, *, nic_key=None, profile=None):
+def set_dvport(
+    opts, vm_id_or_name, dvs_name_or_id, dport_group_name, *, nic_key=None, profile=None
+):
     """Reattach a VM NIC to a distributed port group identified **by name**.
 
     Resolves *dvs_name_or_id* + *dport_group_name* to the backing
@@ -239,7 +241,11 @@ def set_dvport(opts, vm_id_or_name, dvs_name_or_id, dport_group_name, *, nic_key
     dvs = dpg_c._dvs(opts, dvs_name_or_id, profile=profile)  # noqa: SLF001
     vm = _vm(opts, vm_id_or_name, profile=profile)
     if nic_key is None:
-        nics = [d for d in vm.config.hardware.device or [] if isinstance(d, vim.vm.device.VirtualEthernetCard)]
+        nics = [
+            d
+            for d in vm.config.hardware.device or []
+            if isinstance(d, vim.vm.device.VirtualEthernetCard)
+        ]
         if not nics:
             raise LookupError(f"VM {vm.name!r} has no Ethernet NICs")
         nic_key = nics[0].key

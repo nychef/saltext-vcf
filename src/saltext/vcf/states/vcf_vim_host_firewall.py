@@ -69,12 +69,18 @@ def firewall_config(
         "name": name,
         "enabled": bool(desired.get("enabled", cur_cfg["enabled"])),
         "allowed_hosts": {
-            "all_ip": bool(desired.get("allowed_hosts", {}).get("all_ip", cur_cfg["allowed_hosts"]["all_ip"])),
+            "all_ip": bool(
+                desired.get("allowed_hosts", {}).get("all_ip", cur_cfg["allowed_hosts"]["all_ip"])
+            ),
             "ip_address": sorted(
-                desired.get("allowed_hosts", {}).get("ip_address", cur_cfg["allowed_hosts"]["ip_address"])
+                desired.get("allowed_hosts", {}).get(
+                    "ip_address", cur_cfg["allowed_hosts"]["ip_address"]
+                )
             ),
             "ip_network": sorted(
-                desired.get("allowed_hosts", {}).get("ip_network", cur_cfg["allowed_hosts"]["ip_network"])
+                desired.get("allowed_hosts", {}).get(
+                    "ip_network", cur_cfg["allowed_hosts"]["ip_network"]
+                )
             ),
         },
     }
@@ -132,23 +138,32 @@ def firewall_configs(name, host, config, profile=None, drift_level=None):
     desired_cfg = {}
     for c2 in configs:
         desired_cfg[c2["name"]] = {
-            "enabled": bool(c2.get("enabled", (cur_cfg.get(c2["name"]) or {}).get("enabled", False))),
+            "enabled": bool(
+                c2.get("enabled", (cur_cfg.get(c2["name"]) or {}).get("enabled", False))
+            ),
             "allowed_hosts": {
                 "all_ip": bool(
                     c2.get("allowed_hosts", {}).get(
-                        "all_ip", (cur_cfg.get(c2["name"]) or {}).get("allowed_hosts", {}).get("all_ip", False)
+                        "all_ip",
+                        (cur_cfg.get(c2["name"]) or {})
+                        .get("allowed_hosts", {})
+                        .get("all_ip", False),
                     )
                 ),
                 "ip_address": sorted(
                     c2.get("allowed_hosts", {}).get(
                         "ip_address",
-                        (cur_cfg.get(c2["name"]) or {}).get("allowed_hosts", {}).get("ip_address", []),
+                        (cur_cfg.get(c2["name"]) or {})
+                        .get("allowed_hosts", {})
+                        .get("ip_address", []),
                     )
                 ),
                 "ip_network": sorted(
                     c2.get("allowed_hosts", {}).get(
                         "ip_network",
-                        (cur_cfg.get(c2["name"]) or {}).get("allowed_hosts", {}).get("ip_network", []),
+                        (cur_cfg.get(c2["name"]) or {})
+                        .get("allowed_hosts", {})
+                        .get("ip_network", []),
                     )
                 ),
             },

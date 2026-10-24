@@ -12,9 +12,8 @@ Implemented via ``VirtualMachine.ReconfigVM_Task`` with a
 
 from pyVmomi import vim
 
-from saltext.vcf.utils import vim as soap
-
 from saltext.vcf.clients.vim_vm import _vm  # noqa: PLC0415  (re-export for state layer)
+from saltext.vcf.utils import vim as soap
 
 _BOOTABLE_CLASSES = {
     "cdrom": vim.vm.BootOptions.BootableCdromDevice,
@@ -145,8 +144,14 @@ def compare(desired, current):
 def drift(desired, current):
     """Return a ``{field: (old, new)}`` dict of differences between the two get-shape dicts."""
     ret = {}
-    for field in ("order", "delay", "enter_bios_setup", "retry_enabled", "retry_delay",
-                  "efi_secure_boot_enabled"):
+    for field in (
+        "order",
+        "delay",
+        "enter_bios_setup",
+        "retry_enabled",
+        "retry_delay",
+        "efi_secure_boot_enabled",
+    ):
         if desired.get(field) != current.get(field):
             ret[field] = (current.get(field), desired.get(field))
     return ret

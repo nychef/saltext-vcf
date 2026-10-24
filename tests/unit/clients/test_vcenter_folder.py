@@ -123,7 +123,7 @@ def test_move_invokes_move_task(opts):
     content = _content_with_folders([src, dst])
     with (
         patch("saltext.vcf.clients.vcenter_folder.soap.content", return_value=content),
-        patch("saltext.vcf.clients.vcenter_folder.soap.wait_for_task") as wait_mock,
+        patch("saltext.vcf.clients.vcenter_folder.soap.wait_for_task"),
     ):
         moid = c.move(opts, "staging", "archive")
     assert moid == "task-mv"

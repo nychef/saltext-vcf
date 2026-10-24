@@ -54,9 +54,7 @@ def boot_manager(
         "order": boot_order if boot_order is not None else current["order"],
         "delay": int(delay) if delay is not None else current["delay"],
         "enter_bios_setup": (
-            bool(enter_bios_setup)
-            if enter_bios_setup is not None
-            else current["enter_bios_setup"]
+            bool(enter_bios_setup) if enter_bios_setup is not None else current["enter_bios_setup"]
         ),
         "retry_enabled": (
             bool(retry_enabled) if retry_enabled is not None else current["retry_enabled"]

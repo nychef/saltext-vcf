@@ -256,9 +256,7 @@ def vmkernel_present(
         if traffic_types is not None:
             ret["changes"].setdefault("traffic_types", traffic_types)
             if not __opts__["test"]:
-                c.vmkernel_set_traffic_types(
-                    __opts__, host, name, traffic_types, profile=profile
-                )
+                c.vmkernel_set_traffic_types(__opts__, host, name, traffic_types, profile=profile)
         if enable_vsan is not None:
             changed = c.vmkernel_vsan(__opts__, host, name, enable_vsan, profile=profile)
             if changed:
@@ -404,12 +402,16 @@ def vmotion_configured(name, host, enabled, device="vmk0", profile=None):
 
     ret = _ret(name)
     current = vm_c.get_enabled(__opts__, host, profile=profile)
-    if bool(current.get("enabled")) == bool(enabled) and (not enabled or current.get("device") == device):
+    if bool(current.get("enabled")) == bool(enabled) and (
+        not enabled or current.get("device") == device
+    ):
         ret["comment"] = f"vMotion on {host} already configured (device={current.get('device')})."
         return ret
     if __opts__["test"]:
         ret["result"] = None
-        ret["comment"] = f"vMotion on {host} would be {'enabled on ' + device if enabled else 'disabled'}."
+        ret["comment"] = (
+            f"vMotion on {host} would be {'enabled on ' + device if enabled else 'disabled'}."
+        )
         ret["changes"] = {"enabled": (current.get("enabled"), bool(enabled))}
         return ret
     if enabled:

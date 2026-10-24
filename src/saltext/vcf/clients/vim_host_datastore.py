@@ -187,7 +187,9 @@ def disks(opts, host, disk_name=None, profile=None):
     return out
 
 
-def mount_vmfs(opts, host, vmfs_uuid, lun_canonical_name=None, *, datastore_name=None, profile=None):
+def mount_vmfs(
+    opts, host, vmfs_uuid, lun_canonical_name=None, *, datastore_name=None, profile=None
+):
     """Attach a LUN and mount an *existing* VMFS volume by uuid on *host*.
 
     Handles the unresolved-volume case (same-uuid clone conflicts) with

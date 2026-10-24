@@ -33,9 +33,7 @@ def _ruleset_to_dict(ruleset):
         "allowed_hosts": {
             "all_ip": bool(allowed.allIp),
             "ip_address": list(allowed.ipAddress or []),
-            "ip_network": [
-                f"{n.network}/{n.prefixLength}" for n in (allowed.ipNetwork or [])
-            ],
+            "ip_network": [f"{n.network}/{n.prefixLength}" for n in (allowed.ipNetwork or [])],
         },
         "rule": [
             {
@@ -107,9 +105,7 @@ def set_config(opts, host, firewall_config, profile=None):
         spec.allowedHosts.allIp = bool(allowed.get("all_ip", False))
         spec.allowedHosts.ipAddress = list(allowed.get("ip_address", []) or [])
         spec.allowedHosts.ipNetwork = [
-            vim.host.Ruleset.IpNetwork(
-                network=n.split("/")[0], prefixLength=int(n.split("/")[1])
-            )
+            vim.host.Ruleset.IpNetwork(network=n.split("/")[0], prefixLength=int(n.split("/")[1]))
             for n in (allowed.get("ip_network", []) or [])
         ]
         fw.UpdateRuleset(id=name, spec=spec)
@@ -151,7 +147,11 @@ def set_allowed(
     spec = vim.host.Ruleset.RulesetSpec()
     spec.allowedHosts = vim.host.Ruleset.IpList(
         allIp=bool(current["allowed_hosts"]["all_ip"]) if all_ip is None else bool(all_ip),
-        ipAddress=list(current["allowed_hosts"]["ip_address"]) if allowed_ips is None else list(allowed_ips),
+        ipAddress=(
+            list(current["allowed_hosts"]["ip_address"])
+            if allowed_ips is None
+            else list(allowed_ips)
+        ),
         ipNetwork=[
             vim.host.Ruleset.IpNetwork(network=n.split("/")[0], prefixLength=int(n.split("/")[1]))
             for n in (

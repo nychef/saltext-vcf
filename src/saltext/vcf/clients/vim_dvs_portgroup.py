@@ -57,7 +57,7 @@ def get(opts, dvs_name_or_id, name, *, host=None, profile=None):
     out = _to_dict(_dpg(opts, dvs_name_or_id, name, profile=profile))
     if host is not None:
         dvs = _dvs(opts, dvs_name_or_id, profile=profile)
-        for member in (dvs.config.host or []):
+        for member in dvs.config.host or []:
             member_host = getattr(getattr(member, "config", None), "host", None)
             if member_host is None:
                 continue

@@ -130,8 +130,6 @@ def test_remove_host(factories, opts):
 
 
 def test_create_with_custom_uplink_prefix_and_discovery(factories, opts):
-    from pyVmomi import vim as _vim
-
     vim_dvs.create(
         opts,
         "prod-dvs",
@@ -198,13 +196,11 @@ def test_reconfigure_version_second_task(factories, opts):
 
 
 def test_reconfigure_health_checks(factories, opts):
-    from pyVmomi import vim as _vim
-
     dvs = factories["dvs"]
-    vlan_cfg = _vim.dvs.VmwareDistributedVirtualSwitch.VlanMtuHealthCheckConfig()
+    vlan_cfg = vim.dvs.VmwareDistributedVirtualSwitch.VlanMtuHealthCheckConfig()
     vlan_cfg.enable = False
     vlan_cfg.interval = 1
-    teaming_cfg = _vim.dvs.VmwareDistributedVirtualSwitch.TeamingHealthCheckConfig()
+    teaming_cfg = vim.dvs.VmwareDistributedVirtualSwitch.TeamingHealthCheckConfig()
     teaming_cfg.enable = False
     teaming_cfg.interval = 1
     dvs.config.healthCheckConfig = [vlan_cfg, teaming_cfg]

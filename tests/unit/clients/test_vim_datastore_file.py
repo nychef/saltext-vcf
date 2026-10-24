@@ -137,13 +137,19 @@ def test_find_vmx_returns_folder_paths(opts, env, monkeypatch):
     res_b.file = [fb]
     sub_task = MagicMock(_moId="task-vmx")
     env["ds"].browser.SearchDatastoreSubFolders_Task.return_value = sub_task
-    monkeypatch.setattr(
-        "saltext.vcf.utils.vim.wait_for_task", lambda task, **kw: [res_a, res_b]
-    )
+    monkeypatch.setattr("saltext.vcf.utils.vim.wait_for_task", lambda task, **kw: [res_a, res_b])
     out = vim_datastore_file.find_vmx(opts, "datastore-1")
     assert out == [
-        {"datastore": "datastore-1", "folder_path": "[datastore-1] alpha/", "file_name": "alpha.vmx"},
-        {"datastore": "datastore-1", "folder_path": "[datastore-1] beta/nested/", "file_name": "beta.vmx"},
+        {
+            "datastore": "datastore-1",
+            "folder_path": "[datastore-1] alpha/",
+            "file_name": "alpha.vmx",
+        },
+        {
+            "datastore": "datastore-1",
+            "folder_path": "[datastore-1] beta/nested/",
+            "file_name": "beta.vmx",
+        },
     ]
     spec = env["ds"].browser.SearchDatastoreSubFolders_Task.call_args.kwargs["searchSpec"]
     assert spec.matchPattern == ["*.vmx"]

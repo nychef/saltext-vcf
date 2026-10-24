@@ -1,7 +1,6 @@
 """Tests for vim_host_datastore VMFS extent inventory + mount/unmount by uuid."""
 
 from unittest.mock import MagicMock
-from unittest.mock import patch
 
 import pytest
 from pyVmomi import vim
@@ -43,7 +42,9 @@ def test_disks_shape_and_filter(opts, factory):
         {"scsi_address": "naa.001", "name": "ds1", "uuid": "vmfs-uuid-1", "local": True},
         {"scsi_address": "naa.002", "name": "ds2", "uuid": "u2", "local": True},
     ]
-    assert vim_host_datastore.disks(opts, "esxi-01", disk_name="ds2")[0]["scsi_address"] == "naa.002"
+    assert (
+        vim_host_datastore.disks(opts, "esxi-01", disk_name="ds2")[0]["scsi_address"] == "naa.002"
+    )
 
 
 def test_mount_vmfs_happy_path(opts, factory):

@@ -556,7 +556,7 @@ def info(opts, vm_id_or_name, profile=None):
     summary = vm.summary
     config = vm.config
     ip_addresses = []
-    for net in (vm.guest.net or []):
+    for net in vm.guest.net or []:
         ip_addresses.extend(ip for ip in (getattr(net, "ipAddress", None) or []))
     mac_addresses = [
         dev.macAddress

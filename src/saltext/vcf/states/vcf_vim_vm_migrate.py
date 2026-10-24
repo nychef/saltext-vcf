@@ -1,7 +1,7 @@
 """State module for VM relocation (``vmware_vm.relocate`` parity)."""
 
-from saltext.vcf.clients import vim_vm_migrate as c
 from saltext.vcf.clients import vim_vm as vm_c
+from saltext.vcf.clients import vim_vm_migrate as c
 
 __virtualname__ = "vcf_vim_vm_migrate"
 
@@ -31,16 +31,17 @@ def relocate(name, new_host_name=None, datastore_name=None, profile=None):
     ret = _ret(name)
     current = vm_c.runtime(__opts__, name, profile=profile)
     host_ok = new_host_name is None or current.get("host") == new_host_name
-    ds_ok = (
-        datastore_name is None
-        or datastore_name in (current.get("datastores") or [])
-    )
+    ds_ok = datastore_name is None or datastore_name in (current.get("datastores") or [])
     if host_ok and ds_ok:
-        ret["comment"] = f"VM {name!r} is already on host {new_host_name} / datastore {datastore_name}."
+        ret["comment"] = (
+            f"VM {name!r} is already on host {new_host_name} / datastore {datastore_name}."
+        )
         return ret
     if __opts__["test"]:
         ret["result"] = None
-        ret["comment"] = f"VM {name!r} would be relocated to host {new_host_name} / datastore {datastore_name}."
+        ret["comment"] = (
+            f"VM {name!r} would be relocated to host {new_host_name} / datastore {datastore_name}."
+        )
         ret["changes"] = {"host": (current.get("host"), new_host_name)}
         return ret
     c.relocate(

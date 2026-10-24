@@ -232,7 +232,13 @@ def test_user_list_uses_host_directory(host_factory, opts):
     host_factory["host"].configManager.userDirectory.RetrieveUserGroups.return_value = [result]
     out = vim_host_security.user_list(opts, "esxi-01")
     assert out == [
-        {"principal": "salt-user", "full_name": "Salt User", "group": False, "shell_access": True, "id": "salt-user"}
+        {
+            "principal": "salt-user",
+            "full_name": "Salt User",
+            "group": False,
+            "shell_access": True,
+            "id": "salt-user",
+        }
     ]
     call = host_factory["host"].configManager.userDirectory.RetrieveUserGroups.call_args
     assert call.args[1] == ""  # empty searchStr = all users

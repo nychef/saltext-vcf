@@ -84,7 +84,11 @@ def delete(opts, folder_id, profile=None):
 
 def rename(opts, folder, new_name, profile=None):
     """Rename *folder* (MoID or name) to *new_name*. Returns task moId."""
-    obj = _folder_by_moid(opts, folder, profile=profile) if folder.startswith("folder-") else _find_folder_object(opts, folder, profile=profile)
+    obj = (
+        _folder_by_moid(opts, folder, profile=profile)
+        if folder.startswith("folder-")
+        else _find_folder_object(opts, folder, profile=profile)
+    )
     if obj is None:
         raise LookupError(f"folder {folder!r} not found")
     task = obj.Rename_Task(newName=new_name)

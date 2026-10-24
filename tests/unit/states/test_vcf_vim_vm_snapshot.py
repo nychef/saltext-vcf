@@ -40,9 +40,7 @@ def test_present_creates(monkeypatch):
 
 def test_present_test_mode(monkeypatch):
     monkeypatch.setattr(c, "state", lambda o, v, s, profile=None: {"present": False})
-    monkeypatch.setattr(
-        c, "create", lambda *a, **kw: pytest.fail("must not create in test mode")
-    )
+    monkeypatch.setattr(c, "create", lambda *a, **kw: pytest.fail("must not create in test mode"))
     monkeypatch.setattr(st, "__opts__", {"test": True}, raising=False)
     ret = st.present("vm-100", "pre-patch")
     assert ret["result"] is None

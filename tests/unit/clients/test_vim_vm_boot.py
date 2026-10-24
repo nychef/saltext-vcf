@@ -81,7 +81,9 @@ def test_set_builds_boot_order(opts):
 def test_set_skips_missing_device_class(opts):
     vm = _fake_vm()
     # Remove the cdrom: order entry for it must be skipped silently.
-    vm.config.hardware.device = [d for d in vm.config.hardware.device if not isinstance(d, MagicMock) or "Cdrom" in str(d)]
+    vm.config.hardware.device = [
+        d for d in vm.config.hardware.device if not isinstance(d, MagicMock) or "Cdrom" in str(d)
+    ]
     # Simpler: keep only the disk.
     disk = MagicMock(spec=vim.vm.device.VirtualDisk)
     disk.key = 2000

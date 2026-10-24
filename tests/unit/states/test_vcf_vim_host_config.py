@@ -172,9 +172,7 @@ def test_advanced_setting_batch_configs(monkeypatch):
     monkeypatch.setattr(
         c, "advanced_set_many", lambda o, h, cfg, profile=None: actions["set_many"].append(cfg)
     )
-    ret = st.advanced_setting(
-        "batch", host="esxi-01", configs={"A.Opt": 5, "B.Opt": 2}
-    )
+    ret = st.advanced_setting("batch", host="esxi-01", configs={"A.Opt": 5, "B.Opt": 2})
     assert ret["changes"] == {"A.Opt": (1, 5)}
     assert actions["set_many"] == [{"A.Opt": 5}]
 

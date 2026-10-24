@@ -24,7 +24,9 @@ def test_enters_maintenance(monkeypatch):
     monkeypatch.setattr(c, "enter", lambda o, h, **kw: calls.append(kw))
     ret = st.maintenance("mm", "esxi-01", enter_maintenance_mode=True)
     assert ret["changes"] == {"maintenance": (False, True)}
-    assert calls == [{"evacuate_powered_off_vms": False, "vsan_mode": None, "timeout": 0, "profile": None}]
+    assert calls == [
+        {"evacuate_powered_off_vms": False, "vsan_mode": None, "timeout": 0, "profile": None}
+    ]
 
 
 def test_exits_maintenance(monkeypatch):

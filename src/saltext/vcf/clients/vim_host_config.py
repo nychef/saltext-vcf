@@ -36,17 +36,21 @@ def ntp_get(opts, host, profile=None):
     services = h.config.service.service or []
     ntpd = next((s for s in services if s.key == "ntpd"), None)
     tz = getattr(date_time_info, "timeZone", None)
-    ntp_file = getattr(date_time_info.ntpConfig, "configFile", None) if date_time_info.ntpConfig else None
+    ntp_file = (
+        getattr(date_time_info.ntpConfig, "configFile", None) if date_time_info.ntpConfig else None
+    )
     return {
         "servers": servers,
         "enabled": bool(ntpd.running) if ntpd else False,
         "policy": ntpd.policy if ntpd else "off",
-        "time_zone": {
-            "key": getattr(tz, "key", None),
-            "name": getattr(tz, "name", None),
-        }
-        if tz is not None
-        else None,
+        "time_zone": (
+            {
+                "key": getattr(tz, "key", None),
+                "name": getattr(tz, "name", None),
+            }
+            if tz is not None
+            else None
+        ),
         "config_file": ntp_file,
     }
 
@@ -198,7 +202,7 @@ def advanced_set_many(opts, host, config_dict, profile=None):
     h = _host(opts, host, profile=profile)
     mgr = h.configManager.advancedOption
     supported = {}
-    for opt in (getattr(mgr, "supportedOption", None) or []):
+    for opt in getattr(mgr, "supportedOption", None) or []:
         try:
             supported[opt.key] = opt.optionType
         except AttributeError:

@@ -153,8 +153,14 @@ def create(
             uplinkPortName=uplink_names
         ),
     )
-    _apply_optional_cfg(cfg, discovery_protocol, discovery_operation, multicast_filtering_mode,
-                        contact_name, contact_description)
+    _apply_optional_cfg(
+        cfg,
+        discovery_protocol,
+        discovery_operation,
+        multicast_filtering_mode,
+        contact_name,
+        contact_description,
+    )
     _apply_security_policy(cfg, network_promiscuous, network_mac_changes, network_forged_transmits)
     spec = vim.DistributedVirtualSwitch.CreateSpec(configSpec=cfg)
     if version:
@@ -183,8 +189,14 @@ def create(
     return task._moId  # noqa: SLF001
 
 
-def _apply_optional_cfg(cfg, discovery_protocol, discovery_operation, multicast_filtering_mode,
-                        contact_name, contact_description):
+def _apply_optional_cfg(
+    cfg,
+    discovery_protocol,
+    discovery_operation,
+    multicast_filtering_mode,
+    contact_name,
+    contact_description,
+):
     if discovery_protocol or discovery_operation:
         ldp = vim.host.LinkDiscoveryProtocolConfig()
         if discovery_protocol == "disabled":
@@ -214,7 +226,11 @@ def _apply_security_policy(
     type has no ``securityPolicy`` field); pyVmomi serializes the
     assigned class. Unset fields inherit from *current_policy*.
     """
-    if network_promiscuous is None and network_mac_changes is None and network_forged_transmits is None:
+    if (
+        network_promiscuous is None
+        and network_mac_changes is None
+        and network_forged_transmits is None
+    ):
         return
     policy = vim.dvs.VmwareDistributedVirtualSwitch.SecurityPolicy()
     for field, want in (
@@ -272,12 +288,26 @@ def reconfigure(
         cfg.uplinkPortPolicy = vim.DistributedVirtualSwitch.NameArrayUplinkPortPolicy(
             uplinkPortName=[f"{prefix}{i + 1}" for i in range(int(num_uplinks))]
         )
-    _apply_optional_cfg(cfg, discovery_protocol, discovery_operation, multicast_filtering_mode,
-                        contact_name, contact_description)
-    if discovery_protocol or discovery_operation or multicast_filtering_mode or contact_name or contact_description:
+    _apply_optional_cfg(
+        cfg,
+        discovery_protocol,
+        discovery_operation,
+        multicast_filtering_mode,
+        contact_name,
+        contact_description,
+    )
+    if (
+        discovery_protocol
+        or discovery_operation
+        or multicast_filtering_mode
+        or contact_name
+        or contact_description
+    ):
         # preserve current values for fields not provided
         current = dvs.config
-        if cfg.linkDiscoveryProtocolConfig is None and getattr(current, "linkDiscoveryProtocolConfig", None):
+        if cfg.linkDiscoveryProtocolConfig is None and getattr(
+            current, "linkDiscoveryProtocolConfig", None
+        ):
             cfg.linkDiscoveryProtocolConfig = current.linkDiscoveryProtocolConfig
         if cfg.multicastFilteringMode is None and getattr(current, "multicastFilteringMode", None):
             cfg.multicastFilteringMode = current.multicastFilteringMode
@@ -285,7 +315,10 @@ def reconfigure(
             cfg.contact = current.contact
     current_policy = getattr(getattr(dvs.config, "defaultPortConfig", None), "securityPolicy", None)
     _apply_security_policy(
-        cfg, network_promiscuous, network_mac_changes, network_forged_transmits,
+        cfg,
+        network_promiscuous,
+        network_mac_changes,
+        network_forged_transmits,
         current_policy=current_policy,
     )
     task = dvs.ReconfigureDvs_Task(spec=cfg)
@@ -314,8 +347,14 @@ def reconfigure(
     return task._moId  # noqa: SLF001
 
 
-def _update_health_checks(dvs, *, vlan_mtu=None, vlan_mtu_interval=None,
-                           teaming_failover=None, teaming_failover_interval=None):
+def _update_health_checks(
+    dvs,
+    *,
+    vlan_mtu=None,
+    vlan_mtu_interval=None,
+    teaming_failover=None,
+    teaming_failover_interval=None,
+):
     configs = list(getattr(dvs.config, "healthCheckConfig", None) or [])
     if not configs:
         return None

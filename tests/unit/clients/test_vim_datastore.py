@@ -1,10 +1,8 @@
 """Tests for clients.vim_datastore (datastore lifecycle via SOAP)."""
 
 from unittest.mock import MagicMock
-from unittest.mock import patch
 
 import pytest
-from pyVmomi import vim
 
 from saltext.vcf.clients import vim_datastore
 
@@ -56,7 +54,9 @@ def test_get_shape(opts, factory, monkeypatch):
 
 def test_get_or_none_missing(opts, monkeypatch):
     monkeypatch.setattr(
-        vim_datastore, "_find_datastore", lambda o, n, profile=None: (_ for _ in ()).throw(LookupError("x"))
+        vim_datastore,
+        "_find_datastore",
+        lambda o, n, profile=None: (_ for _ in ()).throw(LookupError("x")),
     )
     assert vim_datastore.get_or_none(opts, "nope") is None
 

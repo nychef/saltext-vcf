@@ -40,9 +40,9 @@ def present(
             drift["cardinality"] = (existing.get("cardinality"), cardinality)
         if description is not None and existing.get("description") != description:
             drift["description"] = (existing.get("description"), description)
-        if associable_types is not None and sorted(existing.get("associable_types") or []) != sorted(
-            associable_types
-        ):
+        if associable_types is not None and sorted(
+            existing.get("associable_types") or []
+        ) != sorted(associable_types):
             drift["associable_types"] = (
                 existing.get("associable_types"),
                 list(associable_types),

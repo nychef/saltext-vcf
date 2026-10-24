@@ -178,10 +178,9 @@ def set_ip_info(
     vm = _vm(opts, vm_id_or_name, profile=profile)
     if vm.runtime.powerState == "poweredOn":
         raise RuntimeError("VM must be powered off before IP customization")
-    vm_os = (
-        (getattr(vm.summary.guest, "guestFullName", None) or "").lower()
-        or (guest_os or "").lower()
-    )
+    vm_os = (getattr(vm.summary.guest, "guestFullName", None) or "").lower() or (
+        guest_os or ""
+    ).lower()
     if not vm_os:
         raise ValueError("guestFullName is empty AND guest_os was not passed")
     if "linux" in vm_os:
@@ -194,7 +193,9 @@ def set_ip_info(
     else:
         raise ValueError("Unsupported OS for IP customization")
     nics = [
-        d for d in vm.config.hardware.device or [] if isinstance(d, vim.vm.device.VirtualEthernetCard)
+        d
+        for d in vm.config.hardware.device or []
+        if isinstance(d, vim.vm.device.VirtualEthernetCard)
     ]
     if len(nics) > 1:
         raise RuntimeError("Only a single NIC is supported for IP customization")

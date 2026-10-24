@@ -1,7 +1,6 @@
 """Tests for clients.vim_host_vmotion (HostVMotionSystem)."""
 
 from unittest.mock import MagicMock
-from unittest.mock import patch
 
 import pytest
 

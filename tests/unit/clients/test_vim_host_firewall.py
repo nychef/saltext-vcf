@@ -1,10 +1,8 @@
 """Tests for clients.vim_host_firewall (vCenter-routed rulesets)."""
 
 from unittest.mock import MagicMock
-from unittest.mock import patch
 
 import pytest
-from pyVmomi import vim
 
 from saltext.vcf.clients import vim_host_firewall
 
@@ -62,7 +60,11 @@ def test_set_config_full_shape(opts, factory):
     cfg = {
         "name": "CIMHttpServer",
         "enabled": False,
-        "allowed_hosts": {"all_ip": False, "ip_address": ["10.1.1.1"], "ip_network": ["10.2.0.0/16"]},
+        "allowed_hosts": {
+            "all_ip": False,
+            "ip_address": ["10.1.1.1"],
+            "ip_network": ["10.2.0.0/16"],
+        },
     }
     out = vim_host_firewall.set_config(opts, "esxi-01", cfg)
     factory["fw"].DisableRuleset.assert_called_once_with(id="CIMHttpServer")

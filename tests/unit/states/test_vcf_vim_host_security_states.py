@@ -17,7 +17,9 @@ def inject_opts(monkeypatch, opts):
 def test_user_present_creates(monkeypatch):
     monkeypatch.setattr(c, "user_get_or_none", lambda o, h, u, profile=None: None)
     called = {}
-    monkeypatch.setattr(c, "user_create", lambda o, h, u, p, **kw: called.update(user=u, pw=p, **kw))
+    monkeypatch.setattr(
+        c, "user_create", lambda o, h, u, p, **kw: called.update(user=u, pw=p, **kw)
+    )
     ret = st.user_present("svc-audit", "esxi-01", password="pw", description="audit")
     assert ret["changes"] == {"new": "svc-audit"}
     assert called == {"user": "svc-audit", "pw": "pw", "description": "audit", "profile": None}
@@ -98,7 +100,9 @@ def test_password_present_test_mode(monkeypatch):
 
 def test_lockdown_enable_with_exceptions(monkeypatch):
     monkeypatch.setattr(
-        c, "lockdown_get", lambda o, h, profile=None: {"mode": "lockdownDisabled", "exception_users": []}
+        c,
+        "lockdown_get",
+        lambda o, h, profile=None: {"mode": "lockdownDisabled", "exception_users": []},
     )
     calls = []
     monkeypatch.setattr(c, "lockdown_set", lambda o, h, m, profile=None: calls.append(("mode", m)))

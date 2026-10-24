@@ -290,8 +290,6 @@ def test_ha_set_reservation_based_admission_policy(cluster_factory, opts):
 
 
 def test_ha_set_unknown_admission_policy_raises(cluster_factory, opts):
-    import pytest
-
     with pytest.raises(ValueError):
         vim_cluster_config.ha_set(opts, "domain-c9", admission_control_policy={"bogus": {}})
 

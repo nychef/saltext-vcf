@@ -71,9 +71,7 @@ def drs_set(
     if vm_monitoring_enabled is not None:
         cfg.enableVmBehaviorOverrides = bool(vm_monitoring_enabled)
     if advanced_settings is not None:
-        cfg.option = [
-            vim.option.OptionValue(key=k, value=v) for k, v in advanced_settings.items()
-        ]
+        cfg.option = [vim.option.OptionValue(key=k, value=v) for k, v in advanced_settings.items()]
     spec = vim.cluster.ConfigSpecEx(drsConfig=cfg)
     cl = _cluster(opts, cluster, profile=profile)
     task = cl.ReconfigureComputeResource_Task(spec=spec, modify=True)
@@ -282,8 +280,10 @@ def ha_set(
         if restart_priority_timeout is not None:
             vm_settings.restartPriorityTimeout = int(restart_priority_timeout)
         tools = getattr(vm_settings, "vmToolsMonitoringSettings", None)
-        needs_tools = any(v is not None for v in (vm_min_up_time, vm_max_failure_window,
-                                                  vm_max_failures, vm_failure_interval))
+        needs_tools = any(
+            v is not None
+            for v in (vm_min_up_time, vm_max_failure_window, vm_max_failures, vm_failure_interval)
+        )
         if needs_tools:
             if tools is None:
                 tools = vim.cluster.VmToolsMonitoringSettings()
@@ -298,11 +298,16 @@ def ha_set(
             if vm_failure_interval is not None:
                 tools.failureInterval = int(vm_failure_interval)
             vm_settings.vmToolsMonitoringSettings = tools
-        needs_vcp = any(v is not None for v in (enable_apd_timeout_for_hosts,
-                                                vm_reaction_on_apd_cleared,
-                                                vm_storage_protection_for_apd,
-                                                vm_storage_protection_for_pdl,
-                                                vm_terminate_delay_for_apd_sec))
+        needs_vcp = any(
+            v is not None
+            for v in (
+                enable_apd_timeout_for_hosts,
+                vm_reaction_on_apd_cleared,
+                vm_storage_protection_for_apd,
+                vm_storage_protection_for_pdl,
+                vm_terminate_delay_for_apd_sec,
+            )
+        )
         if needs_vcp:
             vcp = getattr(vm_settings, "vmComponentProtectionSettings", None)
             if vcp is None:

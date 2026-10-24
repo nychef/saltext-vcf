@@ -47,7 +47,11 @@ def present(
         if (a.get("assigned_license") or {}).get("license_key") == name
     ]
     entity_id = c.resolve_entity(
-        __opts__, datacenter=datacenter, cluster=cluster, esxi_hostname=esxi_hostname, profile=profile
+        __opts__,
+        datacenter=datacenter,
+        cluster=cluster,
+        esxi_hostname=esxi_hostname,
+        profile=profile,
     )
     if any(a["entity_id"] == entity_id for a in assigned):
         ret["comment"] = ret["comment"] or f"license {name!r} already assigned."

@@ -152,6 +152,4 @@ def unmount_vmfs(host, vmfs_uuid, detach_luns=True, profile=None):
 
         salt '*' vcf_vim_host_datastore.unmount_vmfs esxi-01 5f6b... detach_luns=true
     """
-    return c.unmount_vmfs(
-        __opts__, host, vmfs_uuid, detach_luns=detach_luns, profile=profile
-    )
+    return c.unmount_vmfs(__opts__, host, vmfs_uuid, detach_luns=detach_luns, profile=profile)

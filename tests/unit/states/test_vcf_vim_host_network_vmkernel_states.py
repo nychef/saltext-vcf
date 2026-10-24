@@ -85,7 +85,9 @@ def test_vmkernel_present_vsan_already_wired(monkeypatch):
 
 
 def test_vmotion_configured_enable(monkeypatch):
-    monkeypatch.setattr(vm_c, "get_enabled", lambda o, h, profile=None: {"enabled": False, "device": None})
+    monkeypatch.setattr(
+        vm_c, "get_enabled", lambda o, h, profile=None: {"enabled": False, "device": None}
+    )
     monkeypatch.setattr(vm_c, "enable", lambda o, h, d, profile=None: None)
     ret = st.vmotion_configured("vmotion", "esxi-01", True, device="vmk1")
     assert ret["changes"]["enabled"] == (False, True)
@@ -93,13 +95,17 @@ def test_vmotion_configured_enable(monkeypatch):
 
 
 def test_vmotion_configured_noop(monkeypatch):
-    monkeypatch.setattr(vm_c, "get_enabled", lambda o, h, profile=None: {"enabled": True, "device": "vmk1"})
+    monkeypatch.setattr(
+        vm_c, "get_enabled", lambda o, h, profile=None: {"enabled": True, "device": "vmk1"}
+    )
     ret = st.vmotion_configured("vmotion", "esxi-01", True, device="vmk1")
     assert ret["changes"] == {}
 
 
 def test_vmotion_configured_test_mode(monkeypatch):
-    monkeypatch.setattr(vm_c, "get_enabled", lambda o, h, profile=None: {"enabled": False, "device": None})
+    monkeypatch.setattr(
+        vm_c, "get_enabled", lambda o, h, profile=None: {"enabled": False, "device": None}
+    )
     monkeypatch.setattr(vm_c, "enable", lambda *a, **kw: pytest.fail("must not enable"))
     monkeypatch.setattr(st, "__opts__", {"test": True}, raising=False)
     ret = st.vmotion_configured("vmotion", "esxi-01", True, device="vmk1")

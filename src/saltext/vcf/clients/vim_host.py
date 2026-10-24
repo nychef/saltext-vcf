@@ -97,7 +97,9 @@ def move(opts, host, cluster, profile=None):
             host_dc = node
             break
         node = getattr(node, "parent", None)
-    if host_dc is not None and cluster_dc is not None and host_dc._moId != cluster_dc._moId:  # noqa: SLF001
+    if (
+        host_dc is not None and cluster_dc is not None and host_dc._moId != cluster_dc._moId
+    ):  # noqa: SLF001
         raise RuntimeError("cluster has to be in the same datacenter as the host")
     task = target.MoveInto_Task([h])
     soap.wait_for_task(task)
@@ -228,7 +230,7 @@ def _host_info_dict(h):
             "free_space": store.summary.freeSpace,
         }
     ret["nics"] = {}
-    for nic in ((h.config.network.vnic if h.config and h.config.network else []) or []):
+    for nic in (h.config.network.vnic if h.config and h.config.network else []) or []:
         ret["nics"][nic.device] = {
             "ip_address": nic.spec.ip.ipAddress,
             "subnet_mask": nic.spec.ip.subnetMask,
@@ -253,7 +255,7 @@ def _host_info_dict(h):
     ret["uptime"] = h.summary.quickStats.uptime
     ret["in_maintenance_mode"] = h.runtime.inMaintenanceMode
     ret["system_uuid"] = h.hardware.systemInfo.uuid
-    for info in (h.hardware.systemInfo.otherIdentifyingInfo or []):
+    for info in h.hardware.systemInfo.otherIdentifyingInfo or []:
         ret[_camel_to_snake(info.identifierType.key)] = info.identifierValue
     return ret
 

@@ -198,10 +198,16 @@ def test_scsi_luns_filters(opts, host_factory):
         _fake_lun(),
         _fake_lun("naa.002", "vmhba1:C0:T1:L1", state="off", ssd=False),
     ]
-    assert [d["device"] for d in vim_host_storage.scsi_luns(opts, "esx-1", ssd=False)] == ["t10.ATA____naa.002"]
-    assert [d["name"] for d in vim_host_storage.scsi_luns(opts, "esx-1", state="attached")] == ["naa.001"]
-    assert [d["name"] for d in vim_host_storage.scsi_luns(opts, "esx-1", lun_name="vmhba1")] == ["naa.002"]
-    assert vim_host_storage.scsi_luns(opts, "esx-1", disk_ids=["naa.001"]) [0]["name"] == "naa.001"
+    assert [d["device"] for d in vim_host_storage.scsi_luns(opts, "esx-1", ssd=False)] == [
+        "t10.ATA____naa.002"
+    ]
+    assert [d["name"] for d in vim_host_storage.scsi_luns(opts, "esx-1", state="attached")] == [
+        "naa.001"
+    ]
+    assert [d["name"] for d in vim_host_storage.scsi_luns(opts, "esx-1", lun_name="vmhba1")] == [
+        "naa.002"
+    ]
+    assert vim_host_storage.scsi_luns(opts, "esx-1", disk_ids=["naa.001"])[0]["name"] == "naa.001"
 
 
 def test_list_ssds_and_non_ssds(opts, host_factory):

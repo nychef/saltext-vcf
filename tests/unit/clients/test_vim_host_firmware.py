@@ -1,11 +1,9 @@
 """Tests for clients.vim_host_firmware (backup/restore/reset)."""
 
 from unittest.mock import MagicMock
-from unittest.mock import patch
 
 import pytest
 import responses
-from pyVmomi import vim
 
 from saltext.vcf.clients import vim_host_firmware
 
@@ -39,13 +37,19 @@ def factory(monkeypatch):
 
 def test_backup_downloads_bundle(opts, factory, tmp_path):
     with responses.RequestsMock(assert_all_requests_are_fired=False) as rsps:
-        rsps.add(responses.GET, "https://esxi-01//downloads/configBundle-esxi-01.tgz", body=b"bundle-bytes")
+        rsps.add(
+            responses.GET,
+            "https://esxi-01//downloads/configBundle-esxi-01.tgz",
+            body=b"bundle-bytes",
+        )
         out = vim_host_firmware.backup(opts, "esxi-01", cachedir=str(tmp_path))
     assert out["esxi-01"]["file_name"].endswith("configBundle-esxi-01.tgz")
     assert (tmp_path / "configBundle-esxi-01.tgz").read_bytes() == b"bundle-bytes"
     import hashlib
 
-    assert out["esxi-01"]["sha1"] == hashlib.sha1(b"bundle-bytes", usedforsecurity=False).hexdigest()
+    assert (
+        out["esxi-01"]["sha1"] == hashlib.sha1(b"bundle-bytes", usedforsecurity=False).hexdigest()
+    )
 
 
 def test_restore_uploads_and_brackets_maintenance(opts, factory, tmp_path):

@@ -39,7 +39,7 @@ def _fake_content(root=None):
 class _Node:
     def __init__(self, name, moid, parent=None):
         self.name = name
-        self._moId = moid  # noqa: SLF001
+        self._moId = moid  # noqa: SLF001  pylint: disable=invalid-name
         self.parent = parent
 
 
@@ -111,6 +111,7 @@ def test_unregister_refuses_when_powered_on(opts):
 
 def test_unregister_shutdown_powers_off_then_unregisters(opts):
     vm = _fake_vm(power="poweredOn")
+
     # Graceful path: after ShutdownGuest the powerState flips to poweredOff.
     def _flip():
         vm.runtime.powerState = "poweredOff"

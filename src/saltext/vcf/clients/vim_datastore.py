@@ -135,17 +135,15 @@ def list_(
                 # Scsi-address form: match against devicePath of LUNs on hosts
                 # that mount the datastore (best-effort).
                 matched = False
-                for mnt in (getattr(ds, "host", None) or []):
+                for mnt in getattr(ds, "host", None) or []:
                     h = getattr(mnt, "key", None)
                     storage = getattr(h, "configManager", None)
                     storage = getattr(storage, "storageSystem", None) if storage else None
                     if storage is None:
                         continue
-                    for lun in (storage.storageDeviceInfo.scsiLun or []):
+                    for lun in storage.storageDeviceInfo.scsiLun or []:
                         if lun.devicePath in set(backing_disk_scsi_addresses):
-                            if lun.canonicalName in set(
-                                (d.get("vmfs") or {}).get("extents") or []
-                            ):
+                            if lun.canonicalName in set((d.get("vmfs") or {}).get("extents") or []):
                                 matched = True
                 if not matched:
                     continue
@@ -167,25 +165,30 @@ def _walk_dc_name(obj):
 def _is_in_datacenter(ds, datacenter, content):
     node = ds
     while node is not None:
-        if isinstance(node, vim.Datacenter) and datacenter in (node._moId, node.name):  # noqa: SLF001
+        if isinstance(node, vim.Datacenter) and datacenter in (
+            node._moId,
+            node.name,
+        ):  # noqa: SLF001
             return True
         node = getattr(node, "parent", None)
     return False
 
 
 def _is_in_cluster(ds, cluster, content):
-    for mnt in (getattr(ds, "host", None) or []):
+    for mnt in getattr(ds, "host", None) or []:
         h = mnt.key
         node = h
         while node is not None:
-            if getattr(node, "name", None) == cluster or getattr(node, "_moId", None) == cluster:  # noqa: SLF001
+            if (
+                getattr(node, "name", None) == cluster or getattr(node, "_moId", None) == cluster
+            ):  # noqa: SLF001
                 return True
             node = getattr(node, "parent", None)
     return False
 
 
 def _is_on_host(ds, host, content):
-    for mnt in (getattr(ds, "host", None) or []):
+    for mnt in getattr(ds, "host", None) or []:
         h = mnt.key
         if host in (getattr(h, "_moId", None), getattr(h, "name", None)):  # noqa: SLF001
             return True
@@ -230,14 +233,14 @@ def disk_partitions(opts, host, *, disk_id=None, scsi_address=None, profile=None
         raise ValueError("provide disk_id or scsi_address")
     storage = host_storage._ss(host_storage._host(opts, host, profile=profile))  # noqa: SLF001
     if not disk_id:
-        for lun in (storage.storageDeviceInfo.scsiLun or []):
+        for lun in storage.storageDeviceInfo.scsiLun or []:
             if lun.devicePath == scsi_address:
                 disk_id = lun.canonicalName
                 break
         if not disk_id:
             raise LookupError(f"scsi lun with address {scsi_address!r} not found on {host!r}")
     device_path = None
-    for lun in (storage.storageDeviceInfo.scsiLun or []):
+    for lun in storage.storageDeviceInfo.scsiLun or []:
         if lun.canonicalName == disk_id:
             device_path = lun.devicePath
             break
@@ -246,15 +249,11 @@ def disk_partitions(opts, host, *, disk_id=None, scsi_address=None, profile=None
     info = storage.RetrieveDiskPartitionInfo(devicePath=device_path)[0]
     out = []
     for spec in info.spec.partition:
-        layout = next(
-            (p for p in info.layout.partition if p.partition == spec.partition), None
-        )
+        layout = next((p for p in info.layout.partition if p.partition == spec.partition), None)
         sectors = spec.endSector - spec.startSector + 1
         size_kb = None
         if layout is not None:
-            size_kb = (
-                (layout.end.block - layout.start.block + 1) * layout.start.blockSize / 1024
-            )
+            size_kb = (layout.end.block - layout.start.block + 1) * layout.start.blockSize / 1024
         out.append(
             {
                 "device": disk_id,

@@ -12,7 +12,9 @@ def inject_opts(monkeypatch, opts):
 
 
 def test_already_in_maintenance(monkeypatch):
-    monkeypatch.setattr(c, "get_or_none", lambda o, n, profile=None: {"maintenance_mode": "inMaintenance"})
+    monkeypatch.setattr(
+        c, "get_or_none", lambda o, n, profile=None: {"maintenance_mode": "inMaintenance"}
+    )
     ret = st.maintenance_mode("ds1", enter_maintenance_mode=True)
     assert ret["changes"] == {}
 
@@ -27,7 +29,9 @@ def test_enters_maintenance(monkeypatch):
 
 
 def test_exits_maintenance(monkeypatch):
-    monkeypatch.setattr(c, "get_or_none", lambda o, n, profile=None: {"maintenance_mode": "inMaintenance"})
+    monkeypatch.setattr(
+        c, "get_or_none", lambda o, n, profile=None: {"maintenance_mode": "inMaintenance"}
+    )
     called = []
     monkeypatch.setattr(c, "exit_maintenance", lambda o, n, profile=None: called.append(n))
     ret = st.maintenance_mode("ds1", enter_maintenance_mode=False)

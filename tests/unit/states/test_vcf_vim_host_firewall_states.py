@@ -76,7 +76,9 @@ def test_firewall_configs_batch_drift(monkeypatch):
         },
     )
     captured = []
-    monkeypatch.setattr(c, "set_all_configs", lambda o, h, cfgs, profile=None: captured.extend(cfgs))
+    monkeypatch.setattr(
+        c, "set_all_configs", lambda o, h, cfgs, profile=None: captured.extend(cfgs)
+    )
     ret = st.firewall_configs("fw", "esxi-01", {"sshServer": True, "sshClient": True})
     assert ret["result"] is True
     assert "sshClient" in ret["changes"]

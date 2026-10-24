@@ -83,4 +83,6 @@ def list_disk_partitions(host, disk_id=None, scsi_address=None, profile=None):
 
         salt '*' vcf_vim_datastore.list_disk_partitions esxi-01 disk_id=naa.0001
     """
-    return c.disk_partitions(__opts__, host, disk_id=disk_id, scsi_address=scsi_address, profile=profile)
+    return c.disk_partitions(
+        __opts__, host, disk_id=disk_id, scsi_address=scsi_address, profile=profile
+    )

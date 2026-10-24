@@ -34,8 +34,13 @@ def test_category_present_updates_on_drift(monkeypatch):
     monkeypatch.setattr(
         cat_c,
         "by_name",
-        lambda o, n, profile=None: {"id": "urn:cat", "name": n, "cardinality": "SINGLE",
-                                    "description": "old", "associable_types": ["VirtualMachine"]},
+        lambda o, n, profile=None: {
+            "id": "urn:cat",
+            "name": n,
+            "cardinality": "SINGLE",
+            "description": "old",
+            "associable_types": ["VirtualMachine"],
+        },
     )
     monkeypatch.setattr(cat_c, "update", lambda o, cid, spec, profile=None: None)
     ret = cat_st.present("environment", description="new")
@@ -46,17 +51,20 @@ def test_category_present_noop(monkeypatch):
     monkeypatch.setattr(
         cat_c,
         "by_name",
-        lambda o, n, profile=None: {"id": "urn:cat", "name": n, "cardinality": "SINGLE",
-                                    "description": "", "associable_types": ["VirtualMachine"]},
+        lambda o, n, profile=None: {
+            "id": "urn:cat",
+            "name": n,
+            "cardinality": "SINGLE",
+            "description": "",
+            "associable_types": ["VirtualMachine"],
+        },
     )
     ret = cat_st.present("environment", cardinality="SINGLE", associable_types=["VirtualMachine"])
     assert ret["changes"] == {}
 
 
 def test_category_absent(monkeypatch):
-    monkeypatch.setattr(
-        cat_c, "by_name", lambda o, n, profile=None: {"id": "urn:cat", "name": n}
-    )
+    monkeypatch.setattr(cat_c, "by_name", lambda o, n, profile=None: {"id": "urn:cat", "name": n})
     monkeypatch.setattr(cat_c, "delete", lambda o, cid, profile=None: None)
     ret = cat_st.absent("environment")
     assert ret["changes"] == {"old": "environment"}
@@ -70,7 +78,9 @@ def test_tag_present_creates(monkeypatch):
     monkeypatch.setattr(tag_c, "list_", lambda o, profile=None: [])
     called = {}
     monkeypatch.setattr(
-        tag_c, "create", lambda o, n, cid, description="", profile=None: called.update(name=n, cid=cid)
+        tag_c,
+        "create",
+        lambda o, n, cid, description="", profile=None: called.update(name=n, cid=cid),
     )
     ret = tag_st.present("env-prod", category="environment", description="production")
     assert ret["changes"] == {"new": "env-prod"}
@@ -85,7 +95,12 @@ def test_tag_present_updates_description(monkeypatch):
     monkeypatch.setattr(
         tag_c,
         "get",
-        lambda o, t, profile=None: {"id": "urn:tag", "name": "env-prod", "category_id": "urn:cat", "description": "old"},
+        lambda o, t, profile=None: {
+            "id": "urn:tag",
+            "name": "env-prod",
+            "category_id": "urn:cat",
+            "description": "old",
+        },
     )
     monkeypatch.setattr(tag_c, "update", lambda o, t, spec, profile=None: None)
     ret = tag_st.present("env-prod", category="environment", description="new")

@@ -25,7 +25,8 @@ def test_list_all(opts):
     h = MagicMock()
     h.name = "esxi-01"
     h.configManager.imageConfigManager.FetchSoftwarePackages.return_value = [
-        _pkg("esx-base"), _pkg("vsan"),
+        _pkg("esx-base"),
+        _pkg("vsan"),
     ]
     with patch.object(vim_host_packages, "_resolve", return_value=h):
         out = vim_host_packages.list_(opts, "esxi-01")
@@ -37,7 +38,8 @@ def test_list_filtered(opts):
     h = MagicMock()
     h.name = "esxi-01"
     h.configManager.imageConfigManager.FetchSoftwarePackages.return_value = [
-        _pkg("esx-base"), _pkg("vsan"),
+        _pkg("esx-base"),
+        _pkg("vsan"),
     ]
     with patch.object(vim_host_packages, "_resolve", return_value=h):
         out = vim_host_packages.list_(opts, "esxi-01", pkg_name="vsan")

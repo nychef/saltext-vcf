@@ -56,7 +56,9 @@ _STATE_MAP = {
 
 def _lun_to_dict(lun):
     descriptor = [
-        (d.id, d.quality) for d in (getattr(lun, "descriptor", None) or []) if d.quality == "highQuality"
+        (d.id, d.quality)
+        for d in (getattr(lun, "descriptor", None) or [])
+        if d.quality == "highQuality"
     ]
     return {
         "name": lun.displayName,
@@ -72,8 +74,17 @@ def _lun_to_dict(lun):
     }
 
 
-def scsi_luns(opts, host, *, lun_name=None, state=None, disk_ids=None, scsi_addresses=None,
-              ssd=None, profile=None):
+def scsi_luns(
+    opts,
+    host,
+    *,
+    lun_name=None,
+    state=None,
+    disk_ids=None,
+    scsi_addresses=None,
+    ssd=None,
+    profile=None,
+):
     """List SCSI LUNs on *host* with full detail and optional filters.
 
     Filters:
