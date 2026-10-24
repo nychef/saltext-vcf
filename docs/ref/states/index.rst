@@ -31,13 +31,17 @@ _____________
     vcf_nsx_dns_servers
     vcf_nsx_firewall_rule
     vcf_nsx_group
+    vcf_nsx_ip_discovery_profile
     vcf_nsx_ldap
     vcf_nsx_localos_user
+    vcf_nsx_mac_discovery_profile
+    vcf_nsx_manager_service
     vcf_nsx_node_services
     vcf_nsx_ntp_servers
     vcf_nsx_role_binding
     vcf_nsx_security_policy
     vcf_nsx_segment
+    vcf_nsx_segment_security_profile
     vcf_nsx_service
     vcf_nsx_syslog_exporter
     vcf_nsx_telemetry

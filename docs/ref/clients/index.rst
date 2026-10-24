@@ -40,6 +40,7 @@ ______________
     nsx_group
     nsx_ids
     nsx_ip_block
+    nsx_ip_discovery_profile
     nsx_ip_pool
     nsx_ipsec_vpn
     nsx_l2_vpn
@@ -51,6 +52,8 @@ ______________
     nsx_lb_virtual_server
     nsx_ldap
     nsx_localos_user
+    nsx_mac_discovery_profile
+    nsx_manager_service
     nsx_nat
     nsx_node
     nsx_node_services
@@ -59,6 +62,7 @@ ______________
     nsx_role_binding
     nsx_security_policy
     nsx_segment
+    nsx_segment_security_profile
     nsx_service
     nsx_syslog_exporter
     nsx_telemetry

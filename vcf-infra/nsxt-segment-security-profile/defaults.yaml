@@ -1,0 +1,12 @@
+# `**spec` is a raw pass-through to the NSX Policy API PUT body. Field
+# names follow the standard NSX-T SegmentSecurityProfile shape but
+# haven't been exercised against a live NSX Manager — verify before
+# real use.
+profile:
+  name: segment-security-01
+  spec:
+    bpdu_filter_enable: true
+    dhcp_client_block_enabled: false
+    dhcp_server_block_enabled: false
+    non_ip_traffic_block_enabled: false
+    ra_guard_enabled: true

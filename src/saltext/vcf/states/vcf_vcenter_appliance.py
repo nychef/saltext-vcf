@@ -13,10 +13,13 @@ def _ret(name):
     return {"name": name, "changes": {}, "result": True, "comment": ""}
 
 
-def dns_servers(name, servers, mode="is_static", profile=None):
+def dns_servers(name, servers, mode="is_static", profile=None, apply=True):
     """Ensure the appliance's DNS server list and mode match *servers* / *mode*.
 
-    *name* is descriptive. *mode* is ``"is_static"`` or ``"dhcp"``.
+    *name* is descriptive. *mode* is ``"is_static"`` or ``"dhcp"``. Set
+    *apply* to ``False`` to only perform a drift check: the state reports
+    what would change without touching the appliance, regardless of
+    ``test`` mode.
     """
     ret = _ret(name)
     current = c.dns_get(__opts__, profile=profile) or {}
@@ -35,6 +38,11 @@ def dns_servers(name, servers, mode="is_static", profile=None):
     if not actions:
         ret["comment"] = "DNS already configured"
         return ret
+    if not apply:
+        ret["result"] = None
+        ret["changes"] = changes
+        ret["comment"] = f"DNS drift detected: {', '.join(actions)}"
+        return ret
     if __opts__["test"]:
         ret["result"] = None
         ret["comment"] = f"DNS would change: {', '.join(actions)}"
@@ -45,11 +53,14 @@ def dns_servers(name, servers, mode="is_static", profile=None):
     return ret
 
 
-def logging_forwarding(name, servers, profile=None):
+def logging_forwarding(name, servers, profile=None, apply=True):
     """Ensure the appliance's syslog forwarding destinations match *servers*.
 
     *servers* is a list of dicts like
-    ``{"hostname": "...", "port": 514, "protocol": "UDP"}``.
+    ``{"hostname": "...", "port": 514, "protocol": "UDP"}``. Set *apply*
+    to ``False`` to only perform a drift check: the state reports what
+    would change without touching the appliance, regardless of ``test``
+    mode.
     """
     ret = _ret(name)
     current = c.logging_forwarding_get(__opts__, profile=profile) or []
@@ -65,6 +76,11 @@ def logging_forwarding(name, servers, profile=None):
 
     if current_sorted == desired_sorted:
         ret["comment"] = "Syslog forwarding already configured"
+        return ret
+    if not apply:
+        ret["result"] = None
+        ret["changes"] = {"forwarders": {"old": current, "new": list(servers)}}
+        ret["comment"] = "Syslog forwarding drift detected"
         return ret
     if __opts__["test"]:
         ret["result"] = None

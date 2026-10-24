@@ -1,0 +1,10 @@
+# `**spec` is a raw pass-through to the NSX Policy API PUT body. Field
+# names follow the standard NSX-T IPDiscoveryProfile shape but haven't
+# been exercised against a live NSX Manager — verify before real use.
+profile:
+  name: ip-discovery-01
+  spec:
+    arp_snooping_enabled: true
+    dhcp_snooping_enabled: true
+    vmtools_enabled: true
+    nd_snooping_enabled: false

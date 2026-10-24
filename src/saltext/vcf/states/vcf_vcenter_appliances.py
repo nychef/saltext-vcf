@@ -13,10 +13,12 @@ def _ret(name):
     return {"name": name, "changes": {}, "result": True, "comment": ""}
 
 
-def ntp_servers(name, servers, profile=None):
+def ntp_servers(name, servers, profile=None, apply=True):
     """Ensure the appliance's NTP server list matches *servers*.
 
-    *name* is descriptive.
+    *name* is descriptive. Set *apply* to ``False`` to only perform a
+    drift check: the state reports what would change without touching
+    the appliance, regardless of ``test`` mode.
     """
     ret = _ret(name)
     current_servers = sorted(c.ntp_get(__opts__, profile=profile) or [])
@@ -24,6 +26,11 @@ def ntp_servers(name, servers, profile=None):
 
     if current_servers == desired_servers:
         ret["comment"] = "NTP already configured"
+        return ret
+    if not apply:
+        ret["result"] = None
+        ret["changes"] = {"servers": {"old": current_servers, "new": desired_servers}}
+        ret["comment"] = "NTP drift detected: servers"
         return ret
     if __opts__["test"]:
         ret["result"] = None

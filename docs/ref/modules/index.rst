@@ -40,12 +40,15 @@ _________________
     vcf_nsx_group
     vcf_nsx_ids
     vcf_nsx_ip_block
+    vcf_nsx_ip_discovery_profile
     vcf_nsx_ip_pool
     vcf_nsx_ipsec_vpn
     vcf_nsx_l2_vpn
     vcf_nsx_lb
     vcf_nsx_ldap
     vcf_nsx_localos_user
+    vcf_nsx_mac_discovery_profile
+    vcf_nsx_manager_service
     vcf_nsx_nat
     vcf_nsx_node
     vcf_nsx_node_services
@@ -54,6 +57,7 @@ _________________
     vcf_nsx_role_binding
     vcf_nsx_security_policy
     vcf_nsx_segment
+    vcf_nsx_segment_security_profile
     vcf_nsx_service
     vcf_nsx_syslog_exporter
     vcf_nsx_telemetry

@@ -22,12 +22,15 @@ def drs(
     vm_monitoring_enabled=None,
     advanced_settings=None,
     profile=None,
+    apply=True,
 ):
     """Ensure DRS settings on *cluster* match the provided values.
 
     Only non-None fields participate in drift detection. *name* is
-    informational; *cluster* defaults to *name* when omitted.
-    *advanced_settings* is a ``{key: value}`` dict applied to
+    informational; *cluster* defaults to *name* when omitted. Set *apply*
+    to ``False`` to only perform a drift check: the state reports what
+    would change without touching the cluster, regardless of ``test``
+    mode. *advanced_settings* is a ``{key: value}`` dict applied to
     ``drsConfig.option``.
     """
     cluster = cluster or name
@@ -53,6 +56,11 @@ def drs(
             drift[k] = (current.get(k), v)
     if not drift:
         ret["comment"] = f"DRS on {cluster} already matches"
+        return ret
+    if not apply:
+        ret["result"] = None
+        ret["changes"] = drift
+        ret["comment"] = f"DRS on {cluster} drift detected: {sorted(drift)}"
         return ret
     if __opts__["test"]:
         ret["result"] = None
@@ -92,8 +100,14 @@ def ha(
     admission_control_policy=None,
     advanced_options=None,
     profile=None,
+    apply=True,
 ):
-    """Ensure HA settings on *cluster* match the provided values (full knob set)."""
+    """Ensure HA settings on *cluster* match the provided values (full knob set).
+
+    Set *apply* to ``False`` to only perform a drift check: the state
+    reports what would change without touching the cluster, regardless
+    of ``test`` mode.
+    """
     cluster = cluster or name
     ret = _ret(name)
     current = c.ha_get(__opts__, cluster, profile=profile)
@@ -130,6 +144,11 @@ def ha(
             drift[k] = (current.get(k), v)
     if not drift:
         ret["comment"] = f"HA on {cluster} already matches"
+        return ret
+    if not apply:
+        ret["result"] = None
+        ret["changes"] = drift
+        ret["comment"] = f"HA on {cluster} drift detected: {sorted(drift)}"
         return ret
     if __opts__["test"]:
         ret["result"] = None

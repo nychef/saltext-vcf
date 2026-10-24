@@ -1,0 +1,10 @@
+# `**spec` is a raw pass-through to the NSX Policy API PUT body. Field
+# names follow the standard NSX-T MacDiscoveryProfile shape but haven't
+# been exercised against a live NSX Manager — verify before real use.
+profile:
+  name: mac-discovery-01
+  spec:
+    mac_learning_enabled: true
+    mac_limit: 4096
+    mac_limit_policy: ALLOW
+    unknown_unicast_flooding_enabled: true
