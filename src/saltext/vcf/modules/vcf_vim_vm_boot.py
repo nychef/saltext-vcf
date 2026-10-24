@@ -21,7 +21,7 @@ def get(vm, profile=None):
     return c.get(__opts__, vm, profile=profile)
 
 
-def set(
+def set_(
     vm,
     order=None,
     delay=None,
@@ -41,9 +41,9 @@ def set(
 
     .. code-block:: bash
 
-        salt '*' vcf_vim_vm_boot.set vm-100 order='["cdrom", "disk"]' delay=5000 retry_enabled=true
+        salt '*' vcf_vim_vm_boot.set_ vm-100 order='["cdrom", "disk"]' delay=5000 retry_enabled=true
     """
-    return c.set(
+    return c.set_(
         __opts__,
         vm,
         order=order,

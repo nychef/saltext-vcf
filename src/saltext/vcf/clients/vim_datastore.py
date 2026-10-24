@@ -92,6 +92,27 @@ def get_or_none(opts, datastore, profile=None):
         return None
 
 
+def _ds_mounts_scsi_addresses(ds, ds_dict, scsi_addresses):
+    """Best-effort SCSI-address backing match.
+
+    True when any LUN mounted on a host that mounts the datastore has a
+    ``devicePath`` in *scsi_addresses* and its canonical name is one of
+    the datastore's VMFS extents.
+    """
+    wanted = set(scsi_addresses)
+    extents = set((ds_dict.get("vmfs") or {}).get("extents") or [])
+    for mnt in getattr(ds, "host", None) or []:
+        h = getattr(mnt, "key", None)
+        storage = getattr(h, "configManager", None)
+        storage = getattr(storage, "storageSystem", None) if storage else None
+        if storage is None:
+            continue
+        for lun in storage.storageDeviceInfo.scsiLun or []:
+            if lun.devicePath in wanted and lun.canonicalName in extents:
+                return True
+    return False
+
+
 def list_(
     opts,
     *,
@@ -131,22 +152,10 @@ def list_(
                 extents = set((d.get("vmfs") or {}).get("extents") or [])
                 if not extents.intersection(set(backing_disk_ids)):
                     continue
-            if backing_disk_scsi_addresses is not None:
-                # Scsi-address form: match against devicePath of LUNs on hosts
-                # that mount the datastore (best-effort).
-                matched = False
-                for mnt in getattr(ds, "host", None) or []:
-                    h = getattr(mnt, "key", None)
-                    storage = getattr(h, "configManager", None)
-                    storage = getattr(storage, "storageSystem", None) if storage else None
-                    if storage is None:
-                        continue
-                    for lun in storage.storageDeviceInfo.scsiLun or []:
-                        if lun.devicePath in set(backing_disk_scsi_addresses):
-                            if lun.canonicalName in set((d.get("vmfs") or {}).get("extents") or []):
-                                matched = True
-                if not matched:
-                    continue
+            if backing_disk_scsi_addresses is not None and not _ds_mounts_scsi_addresses(
+                ds, d, backing_disk_scsi_addresses
+            ):
+                continue
             out.append(d)
     finally:
         container.Destroy()

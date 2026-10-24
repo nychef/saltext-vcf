@@ -75,7 +75,7 @@ def boot_manager(
         ret["result"] = None
         ret["comment"] = f"Boot options of VM {name!r} would be updated: {sorted(drift)}."
         return ret
-    c.set(
+    c.set_(
         __opts__,
         name,
         order=boot_order if boot_order is not None else None,

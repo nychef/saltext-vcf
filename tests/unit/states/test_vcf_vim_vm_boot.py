@@ -41,7 +41,7 @@ def test_drift_reported_and_applied(monkeypatch):
     calls = {}
     monkeypatch.setattr(
         c,
-        "set",
+        "set_",
         lambda o, v, **kw: calls.update(kw) or "task-1",
     )
     ret = st.boot_manager("vm-100", delay=5000, retry_enabled=True)
@@ -57,7 +57,7 @@ def test_drift_reported_and_applied(monkeypatch):
 def test_test_mode_reports_without_calling_set(monkeypatch):
     monkeypatch.setattr(c, "get", lambda o, v, profile=None: dict(_CURRENT))
     called = []
-    monkeypatch.setattr(c, "set", lambda o, v, **kw: called.append(kw))
+    monkeypatch.setattr(c, "set_", lambda o, v, **kw: called.append(kw))
     monkeypatch.setattr(st, "__opts__", {"test": True}, raising=False)
     ret = st.boot_manager("vm-100", delay=5000)
     assert ret["result"] is None

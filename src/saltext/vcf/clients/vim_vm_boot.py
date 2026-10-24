@@ -98,7 +98,7 @@ def get(opts, vm_id_or_name, profile=None):
     }
 
 
-def set(
+def set_(
     opts,
     vm_id_or_name,
     *,

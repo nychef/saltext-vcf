@@ -18,6 +18,13 @@ from saltext.vcf.utils import esxi as esxi_conn
 from saltext.vcf.utils import vcenter as vc_rest
 from saltext.vcf.utils import vim as soap
 
+# pyVmomi builds classes dynamically, so pylint can't see the nested
+# ``TaskInfo.State`` enum — alias it once here instead of disabling
+# ``no-member`` at every use site.
+_TASK_RUNNING = vim.TaskInfo.State.running  # pylint: disable=no-member
+_TASK_QUEUED = vim.TaskInfo.State.queued  # pylint: disable=no-member
+_TASK_ERROR = vim.TaskInfo.State.error  # pylint: disable=no-member
+
 
 def _http_endpoint(opts, profile=None):
     """Return the (host, verify_ssl) tuple for the datastore HTTP endpoint.
@@ -82,9 +89,9 @@ def list_(opts, datacenter, datastore, path="", profile=None):
     )
     target = _ds_path(datastore, path)
     task = browser.SearchDatastore_Task(datastorePath=target, searchSpec=spec)
-    while task.info.state in (vim.TaskInfo.State.running, vim.TaskInfo.State.queued):
+    while task.info.state in (_TASK_RUNNING, _TASK_QUEUED):
         pass  # rely on the SOAP session keeping order; tests mock this
-    if task.info.state == vim.TaskInfo.State.error:
+    if task.info.state == _TASK_ERROR:
         raise RuntimeError(task.info.error.msg if task.info.error else "search failed")
     result = task.info.result
     out = []

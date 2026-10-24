@@ -51,7 +51,7 @@ def test_get_shape(opts):
 def test_set_builds_boot_order(opts):
     vm = _fake_vm()
     with patch.object(vim_vm_boot, "_vm", return_value=vm):
-        moid = vim_vm_boot.set(
+        moid = vim_vm_boot.set_(
             opts,
             "vm-1",
             order=["cdrom", "disk", "ethernet", "floppy"],
@@ -89,7 +89,7 @@ def test_set_skips_missing_device_class(opts):
     disk.key = 2000
     vm.config.hardware.device = [disk]
     with patch.object(vim_vm_boot, "_vm", return_value=vm):
-        vim_vm_boot.set(opts, "vm-1", order=["cdrom", "disk"])
+        vim_vm_boot.set_(opts, "vm-1", order=["cdrom", "disk"])
     spec = vm.ReconfigVM_Task.call_args.kwargs["spec"]
     order = spec.bootOptions.bootOrder
     assert len(order) == 1
@@ -100,7 +100,7 @@ def test_set_rejects_invalid_order_name(opts):
     vm = _fake_vm()
     with patch.object(vim_vm_boot, "_vm", return_value=vm):
         with pytest.raises(ValueError):
-            vim_vm_boot.set(opts, "vm-1", order=["tape"])
+            vim_vm_boot.set_(opts, "vm-1", order=["tape"])
 
 
 def test_compare_and_drift():

@@ -209,7 +209,7 @@ def mount_vmfs(
     try:
         storage.MountVmfsVolume(vmfs_uuid)
         steps.append(f"mounted vmfs {vmfs_uuid} on {h.name}")
-    except vim.fault.NotFound:
+    except vim.fault.NotFound as exc:
         steps.append(f"vmfs {vmfs_uuid} not found — resolving conflicts")
         unresolved = storage.QueryUnresolvedVmfsVolume() or []
         for vol in unresolved:
@@ -223,7 +223,11 @@ def mount_vmfs(
                 storage.ResolveMultipleUnresolvedVmfsVolumes([spec])
                 steps.append(f"resolved {vmfs_uuid}")
             else:
-                raise RuntimeError(f"{vmfs_uuid} has an unresolvable conflict on {h.name}")
+                # pyvmomi faults are built dynamically, so pylint can't
+                # confirm ``exc`` is an exception — chain it explicitly.
+                raise RuntimeError(  # pylint: disable=bad-exception-cause
+                    f"{vmfs_uuid} has an unresolvable conflict on {h.name}"
+                ) from exc
     except vim.fault.InvalidState:
         steps.append(f"vmfs {vmfs_uuid} already mounted on {h.name}")
     storage.RefreshStorageSystem()

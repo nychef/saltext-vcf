@@ -4,8 +4,6 @@ Port of ``vmware_esxi.list_pkgs`` — ``FetchSoftwarePackages()`` returns
 ``vim.software.PackageInfo`` records for every VIB on the host.
 """
 
-from pyVmomi import vim
-
 from saltext.vcf.utils import vim as soap
 
 

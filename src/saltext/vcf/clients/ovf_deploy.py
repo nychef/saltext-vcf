@@ -13,6 +13,7 @@ exists, so pillar-driven session caching doesn't apply.
 """
 
 import logging
+import os
 import re
 import ssl
 import tarfile
@@ -313,6 +314,7 @@ def _pack_ovf_dir(ovf_dir):
     if ovf_file is None:
         raise FileNotFoundError(f"no .ovf descriptor found in directory {ovf_dir!r}")
     fd, tmp_path = tempfile.mkstemp(suffix=".ova", prefix="vcf-ovf-")
+    os.close(fd)
     try:
         with tarfile.open(tmp_path, "w") as tar:
             for f in sorted(Path(ovf_dir).iterdir()):

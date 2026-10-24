@@ -17,12 +17,12 @@ def about(opts, profile=None):
     """
     si = soap.get_service_instance(opts, profile=profile)
     content = si.RetrieveContent()
-    about = content.about
+    about_info = content.about
     out = {}
-    for attrib in dir(about):
+    for attrib in dir(about_info):
         if attrib.startswith("_"):
             continue
-        val = getattr(about, attrib, None)
+        val = getattr(about_info, attrib, None)
         if callable(val):
             continue
         out[attrib] = val

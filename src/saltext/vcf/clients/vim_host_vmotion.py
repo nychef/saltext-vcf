@@ -5,8 +5,6 @@ Port of ``vmware_esxi.get_vmotion_enabled`` / ``vmotion_enable`` /
 for the ``vmotion`` net-stack (``netConfig.selectedVnic``).
 """
 
-from pyVmomi import vim
-
 from saltext.vcf.utils import vim as soap
 
 

@@ -187,7 +187,7 @@ def _resolve_deploy_creds(host, username, password, profile):
     return host, username, password
 
 
-def deploy_ova(
+def deploy_ova(  # pylint: disable=redefined-outer-name
     vm_name,
     ova_source,
     host=None,
@@ -262,7 +262,7 @@ def deploy_ova(
     )
 
 
-def deploy_ovf(
+def deploy_ovf(  # pylint: disable=redefined-outer-name
     vm_name,
     ovf_source,
     host=None,

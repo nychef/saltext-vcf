@@ -255,8 +255,8 @@ def _host_info_dict(h):
     ret["uptime"] = h.summary.quickStats.uptime
     ret["in_maintenance_mode"] = h.runtime.inMaintenanceMode
     ret["system_uuid"] = h.hardware.systemInfo.uuid
-    for info in h.hardware.systemInfo.otherIdentifyingInfo or []:
-        ret[_camel_to_snake(info.identifierType.key)] = info.identifierValue
+    for ident in h.hardware.systemInfo.otherIdentifyingInfo or []:
+        ret[_camel_to_snake(ident.identifierType.key)] = ident.identifierValue
     return ret
 
 

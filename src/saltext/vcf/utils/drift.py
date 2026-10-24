@@ -5,8 +5,6 @@ Produces ``{path...: {"old": ..., "new": ...}}`` trees; *diff_level*
 selects the tree level at which changes are reported.
 """
 
-import json
-
 
 def drift_report(obj1, obj2, diff_level=None):
     """Find the drift between *obj1* (current) and *obj2* (desired).

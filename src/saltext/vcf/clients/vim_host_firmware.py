@@ -11,7 +11,6 @@ import logging
 from pathlib import Path
 
 import requests
-from pyVmomi import vim
 
 from saltext.vcf.utils import vim as soap
 
